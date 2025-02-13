@@ -42,7 +42,6 @@ $inventory = $stmt->fetchAll();
             <th>Item Name</th>
             <th>Category</th>
             <th>Quantity</th>
-            <th>Supplier</th>
             <th>Last Updated</th>
             <th>Status</th>
         </tr>
@@ -51,7 +50,6 @@ $inventory = $stmt->fetchAll();
                 <td><?= htmlspecialchars($item['item_name']) ?></td>
                 <td><?= htmlspecialchars($item['category']) ?></td>
                 <td><?= htmlspecialchars($item['quantity']) ?></td>
-                <td><?= htmlspecialchars($item['supplier']) ?></td>
                 <td><?= htmlspecialchars($item['last_updated']) ?></td>
                 <td class="<?= $item['quantity'] == 0 ? 'out-of-stock' : '' ?>">
                     <?= htmlspecialchars($item['stock_status']) ?>

@@ -17,45 +17,60 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         die("Invalid request: Invalid ID.");
     }
 
-    // Validate and execute action
+    // Fetch the request details
+    $stmt = $pdo->prepare("SELECT user_id, item_name, quantity FROM requests WHERE id = ?");
+    $stmt->execute([$request_id]);
+    $request = $stmt->fetch();
+
+    if (!$request) {
+        die("Action failed: Request not found.");
+    }
+
+    $approved_by = $_SESSION['user_id']; // Admin ID
+
     if ($action === 'approve') {
-        // Fetch the requested item details
-        $stmt = $pdo->prepare("SELECT item_name, quantity FROM requests WHERE id = ?");
-        $stmt->execute([$request_id]);
-        $request = $stmt->fetch();
-    
-        if (!$request) {
-            die("Approval failed: Request not found.");
-        }
-    
         // Check if the item exists in inventory
         $stmt = $pdo->prepare("SELECT quantity FROM inventory WHERE item_name = ?");
         $stmt->execute([$request['item_name']]);
         $inventory = $stmt->fetch();
-    
+
         if (!$inventory || $inventory['quantity'] < $request['quantity']) {
             die("Approval failed: Not enough stock in inventory.");
         }
-    
-        // Deduct the requested quantity from the inventory
+
+        // Deduct the requested quantity from inventory
         $stmt = $pdo->prepare("UPDATE inventory SET quantity = quantity - ? WHERE item_name = ?");
         $stmt->execute([$request['quantity'], $request['item_name']]);
-    
+
         // Approve the request
         $stmt = $pdo->prepare("UPDATE requests SET status = 'approved' WHERE id = ?");
         $stmt->execute([$request_id]);
-    
+
+        // Insert approval log
+        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, log_date) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->execute(["Request Approved", $approved_by, $request['user_id'], $approved_by]);
+
+        header("Location: approve_requests.php?success=1");
+        exit();
+    } elseif ($action === 'reject') {
+        // Reject the request
+        $stmt = $pdo->prepare("UPDATE requests SET status = 'rejected' WHERE id = ?");
+        $stmt->execute([$request_id]);
+
+        // Insert rejection log
+        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, log_date) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->execute(["Request Rejected", $approved_by, $request['user_id'], $approved_by]);
+
         header("Location: approve_requests.php?success=1");
         exit();
     }
-    
-    
 }
 
 // Fetch all pending requests
 $stmt = $pdo->query("SELECT * FROM requests WHERE status = 'pending'");
 $requests = $stmt->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

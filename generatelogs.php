@@ -23,7 +23,6 @@ $pdf->Ln(5);
 
 // Column headers for logs
 $pdf->SetFont('Arial', 'B', 12);
-$pdf->Cell(40, 10, 'User', 1);
 $pdf->Cell(40, 10, 'Operation', 1);
 $pdf->Cell(40, 10, 'Requested By', 1);
 $pdf->Cell(40, 10, 'Approved By', 1);
@@ -45,8 +44,6 @@ $pdf->SetFont('Arial', '', 10);
 // Output log data
 while ($log = $stmt_logs->fetch()) {
     $approvedBy = $log['approved_by'] ? $log['approved_by'] : 'Pending'; // Handle null approvals
-
-    $pdf->Cell(40, 10, $log['requested_by'], 1);
     $pdf->Cell(40, 10, $log['operation'], 1);
     $pdf->Cell(40, 10, $log['requested_by'], 1);
     $pdf->Cell(40, 10, $approvedBy, 1);

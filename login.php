@@ -11,20 +11,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
+        // Set session variables
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["role"] = $user["role"];
-        header("Location: dashboard.php");
+
+        // Redirect based on role
+        if ($user["role"] === "admin") {
+            header("Location: dashboard.php");
+        } else {
+            header("Location: staff_dashboard.php");
+        }
         exit();
     } else {
-        echo "Invalid username or password.";
+        $error = "Invalid username or password.";
     }
 }
 ?>
+
 <form method="post">
     <input type="text" name="username" placeholder="Username" required>
     <input type="password" name="password" placeholder="Password" required>
     <button type="submit">Login</button>
 </form>
+
+<?php if (isset($error)) echo "<p style='color: red;'>$error</p>"; ?>
+
 <a href="register.php">
     <button type="button">Register</button>
 </a>

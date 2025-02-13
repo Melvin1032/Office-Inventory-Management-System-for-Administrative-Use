@@ -35,8 +35,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     </div>
 
     <div class="card">
-        <h3>Generate Reports</h3>
+        <h3>View Inventory Reports</h3>
         <a href="generate_pdf.php" target="_blank">Download PDF Report</a>
+    </div>
+
+    <div class="card">
+        <h3>View Logs</h3>
+        <a href="generatelogs.php" target="_blank">Download PDF Report</a>
     </div>
 
     <br><br>

@@ -3,9 +3,15 @@ require 'config/config.php';
 session_start();
 if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit(); }
 
-$stmt = $pdo->query("SELECT * FROM inventory");
+$stmt = $pdo->query("SELECT id, item_name, category, quantity, 
+    CASE 
+        WHEN quantity = 0 THEN 'Out of Stock' 
+        ELSE 'In Stock' 
+    END AS stock_status
+FROM inventory");
 $items = $stmt->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,6 +41,7 @@ $items = $stmt->fetchAll();
             <th>Item Name</th>
             <th>Category</th>
             <th>Quantity</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
         <?php foreach ($items as $item): ?>
@@ -45,6 +52,7 @@ $items = $stmt->fetchAll();
             <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>">
                 <?= htmlspecialchars($item["quantity"]) ?>
             </td>
+            <td><?= htmlspecialchars($item["stock_status"]) ?></td>
             <td class="actions">
                 <a href="edit_inventory.php?id=<?= $item['id'] ?>">Edit</a> | 
                 <a href="delete_inventory.php?id=<?= $item['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>

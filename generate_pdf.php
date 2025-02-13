@@ -10,7 +10,11 @@ $pdf->Cell(190, 10, 'Inventory Report', 0, 1, 'C'); // Title centered
 $pdf->Ln(5);
 
 // Column headers
-$pdf->SetFont('Arial', 'B', 12);
+$date = date("Y-m-d H:i:s");
+$pdf->SetFont('Arial', '', 12);
+$pdf->Cell(190, 10, 'Issued on: ' . $date, 0, 1, 'C'); // Centered date
+$pdf->Ln(5);
+
 $pdf->Cell(40, 10, 'Item Name', 1);
 $pdf->Cell(40, 10, 'Category', 1);
 $pdf->Cell(20, 10, 'Qty', 1);

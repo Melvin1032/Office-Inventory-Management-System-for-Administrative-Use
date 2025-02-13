@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'staff') {
 }
 
 // Fetch inventory items
-$stmt = $pdo->query("SELECT item_name, category, quantity, min_stock, supplier, last_updated,
+$stmt = $pdo->query("SELECT item_name, category, quantity, last_updated,
     CASE 
         WHEN quantity = 0 THEN 'Out of Stock' 
         ELSE 'In Stock' 
@@ -42,7 +42,6 @@ $inventory = $stmt->fetchAll();
             <th>Item Name</th>
             <th>Category</th>
             <th>Quantity</th>
-            <th>Min Stock</th>
             <th>Supplier</th>
             <th>Last Updated</th>
             <th>Status</th>
@@ -52,7 +51,6 @@ $inventory = $stmt->fetchAll();
                 <td><?= htmlspecialchars($item['item_name']) ?></td>
                 <td><?= htmlspecialchars($item['category']) ?></td>
                 <td><?= htmlspecialchars($item['quantity']) ?></td>
-                <td><?= htmlspecialchars($item['min_stock']) ?></td>
                 <td><?= htmlspecialchars($item['supplier']) ?></td>
                 <td><?= htmlspecialchars($item['last_updated']) ?></td>
                 <td class="<?= $item['quantity'] == 0 ? 'out-of-stock' : '' ?>">

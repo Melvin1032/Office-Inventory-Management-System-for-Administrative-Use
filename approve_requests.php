@@ -13,8 +13,8 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
     $request_id = intval($_GET['id']);
     $action = $_GET['action'];
 
-    if ($request_id <= 0) {
-        die("Invalid request: Invalid ID.");
+    if ($request_id <= 0 || !in_array($action, ['approve', 'reject'])) {
+        die("Invalid request: Invalid ID or action.");
     }
 
     // Fetch the request details
@@ -47,8 +47,8 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         $stmt->execute([$request_id]);
 
         // Insert approval log
-        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, log_date) VALUES (?, ?, ?, ?, NOW())");
-        $stmt->execute(["Request Approved", $approved_by, $request['user_id'], $approved_by]);
+        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->execute(["Request Approved", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity']]);
 
         header("Location: approve_requests.php?success=1");
         exit();
@@ -58,8 +58,8 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         $stmt->execute([$request_id]);
 
         // Insert rejection log
-        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, log_date) VALUES (?, ?, ?, ?, NOW())");
-        $stmt->execute(["Request Rejected", $approved_by, $request['user_id'], $approved_by]);
+        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->execute(["Request Rejected", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity']]);
 
         header("Location: approve_requests.php?success=1");
         exit();
@@ -84,6 +84,7 @@ $requests = $stmt->fetchAll();
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background: #f4f4f4; }
         a { text-decoration: none; color: #333; font-weight: bold; padding: 5px 10px; }
+        .message { color: green; }
     </style>
 </head>
 <body>
@@ -92,7 +93,7 @@ $requests = $stmt->fetchAll();
     <h1>Manage Requests</h1>
 
     <?php if (isset($_GET['success'])): ?>
-        <p style="color: green;">Request updated successfully!</p>
+        <p class="message">Request updated successfully!</p>
     <?php endif; ?>
 
     <table>
@@ -110,8 +111,8 @@ $requests = $stmt->fetchAll();
                 <td><?= htmlspecialchars($request['quantity']) ?></td>
                 <td><?= htmlspecialchars($request['status']) ?></td>
                 <td>
-                    <a href="approve_requests.php?id=<?= $request['id'] ?>&action=approve">Approve</a> |
-                    <a href="approve_requests.php?id=<?= $request['id'] ?>&action=reject">Reject</a>
+                    <a href="approve_requests.php?id=<?= $request['id'] ?>&action=approve" onclick="return confirm('Are you sure you want to approve this request?')">Approve</a> |
+                    <a href="approve_requests.php?id=<?= $request['id'] ?>&action=reject" onclick="return confirm('Are you sure you want to reject this request?')">Reject</a>
                 </td>
             </tr>
         <?php endforeach; ?>

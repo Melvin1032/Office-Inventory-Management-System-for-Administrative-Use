@@ -9,10 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $item_name = $_POST["item_name"];
     $category = $_POST["category"];
+    $supplier = $_POST["supplier"];  // Define the supplier variable correctly
     $quantity = $_POST["quantity"];
 
-    $stmt = $pdo->prepare("INSERT INTO inventory (item_name, category, quantity) VALUES (?, ?, ?)");
-    if ($stmt->execute([$item_name, $category, $quantity])) {
+    $stmt = $pdo->prepare("INSERT INTO inventory (item_name, category, supplier, quantity) VALUES (?, ?, ?, ?)");
+    if ($stmt->execute([$item_name, $category, $supplier, $quantity])) {
         echo "Item added successfully. <a href='inventory.php'>View Inventory</a>";
     } else {
         echo "Error adding item.";
@@ -20,9 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
 <form method="post">
-    <input type="text" name="item_name" placeholder="Item Name" required>
-    
+
     <!-- Dropdown for category selection -->
     <select name="category" required>
         <option value="">Select Category</option>
@@ -31,6 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option value="Electrical Supplies">Electrical Supplies</option>
     </select>
 
+    <input type="text" name="item_name" placeholder="Item Name" required>
+    <input type="text" name="supplier" placeholder="Name of Supplier" required>
+    
     <input type="number" name="quantity" placeholder="Quantity" required>
     <button type="submit">Add Item</button>
 </form>

@@ -1,13 +1,18 @@
-<?php
-session_start();
-require 'config/config.php';
+<!-- FOR USERS -->
 
+
+<!-- STAFF REQUESTS -->
+
+
+<?php
+require '../config/config.php';
+session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'staff') {
     header("Location: login.php");
     exit();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST['request'])) {
     $user_id = $_SESSION['user_id'];
     $item_id = intval($_POST['item_id']); // Get selected item ID
     $quantity = intval($_POST['quantity']); // Get entered quantity
@@ -41,22 +46,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $stmt = $pdo->query("SELECT id, item_name, quantity FROM inventory WHERE quantity > 0");
 $items = $stmt->fetchAll();
 ?>
-
-<form method="post">
-    <label>Select Item:</label>
-    <select name="item_id" required>
-        <option value="">-- Choose an available item --</option>
-        <?php foreach ($items as $item): ?>
-            <option value="<?= htmlspecialchars($item['id']) ?>">
-                <?= htmlspecialchars($item['item_name']) ?> (Available: <?= $item['quantity'] ?>)
-            </option>
-        <?php endforeach; ?>
-    </select>
-
-    <label>Quantity:</label>
-    <input type="number" name="quantity" min="1" required>
-
-    <button type="submit">Request Item</button>
-</form>
-
-<a href="staff_dashboard.php">Back to Dashboard</a>

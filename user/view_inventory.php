@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config/config.php'; // Include database connection
+require '../config/config.php'; //
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'staff') {
     header("Location: login.php");

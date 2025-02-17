@@ -1,6 +1,77 @@
+<!-- ADD INVENTORY -->
+
 <?php
+require '../config/config.php';
 session_start();
-require 'config/config.php';
+if (!isset($_SESSION['user_id'])) { 
+    header("Location: login.php"); 
+    exit(); 
+}
+
+if (isset($_POST['add'])) {
+    $item_name = $_POST["item_name"];
+    $category = $_POST["category"];
+    $supplier = $_POST["supplier"];
+    $quantity = $_POST["quantity"];
+
+    $stmt = $pdo->prepare("INSERT INTO inventory (item_name, category, supplier, quantity) VALUES (?, ?, ?, ?)");
+    if ($stmt->execute([$item_name, $category, $supplier, $quantity])) {
+        echo "Item added successfully. <a href='inventory.php'>View Inventory</a>";
+    } else {
+        echo "Error adding item.";
+    }
+}
+?>
+
+<!-- VIEW INVENTORY -->
+
+<?php
+require '../config/config.php';
+if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit(); }
+
+$stmt = $pdo->query("SELECT id, item_name, category, quantity, supplier, last_updated,
+    CASE 
+        WHEN quantity = 0 THEN 'Out of Stock' 
+        ELSE 'In Stock' 
+    END AS stock_status
+FROM inventory");
+$items = $stmt->fetchAll();
+?>
+
+<!-- Delete Inventory -->
+
+<?php
+require '../config/config.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+if (isset($_POST['delete'])) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+
+        $stmt = $pdo->prepare("DELETE FROM inventory WHERE id = ?");
+        if ($stmt->execute([$id])) {
+            header("Location: inventory.php?message=Item deleted successfully");
+            exit();
+        } else {
+            header("Location: inventory.php?error=Failed to delete item");
+            exit();
+        }
+    } else {
+        header("Location: inventory.php?error=No item ID provided");
+        exit();
+    }
+}
+?>
+
+
+<!-- APPROVE REQUESTS -->
+
+<?php
+require '../config/config.php';
 
 // Ensure admin is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -71,54 +142,4 @@ $stmt = $pdo->query("SELECT * FROM requests WHERE status = 'pending'");
 $requests = $stmt->fetchAll();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Requests</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .container { max-width: 800px; margin: auto; text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background: #f4f4f4; }
-        a { text-decoration: none; color: #333; font-weight: bold; padding: 5px 10px; }
-        .message { color: green; }
-    </style>
-</head>
-<body>
 
-<div class="container">
-    <h1>Manage Requests</h1>
-
-    <?php if (isset($_GET['success'])): ?>
-        <p class="message">Request updated successfully!</p>
-    <?php endif; ?>
-
-    <table>
-        <tr>
-            <th>Request ID</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach ($requests as $request): ?>
-            <tr>
-                <td><?= htmlspecialchars($request['id']) ?></td>
-                <td><?= htmlspecialchars($request['item_name']) ?></td>
-                <td><?= htmlspecialchars($request['quantity']) ?></td>
-                <td><?= htmlspecialchars($request['status']) ?></td>
-                <td>
-                    <a href="approve_requests.php?id=<?= $request['id'] ?>&action=approve" onclick="return confirm('Are you sure you want to approve this request?')">Approve</a> |
-                    <a href="approve_requests.php?id=<?= $request['id'] ?>&action=reject" onclick="return confirm('Are you sure you want to reject this request?')">Reject</a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-
-</div>
-
-</body>
-</html>

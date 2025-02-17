@@ -1,6 +1,6 @@
 <?php
-require('fpdf186/fpdf.php');
-require 'config/config.php';
+require('../fpdf186/fpdf.php');
+require '../config/config.php';
 
 // Create PDF instance
 $pdf = new FPDF('L');

@@ -19,7 +19,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     </style>
 </head>
 <body>
-
+<?php 
+?>
 <div class="container">
     <h1>Admin Dashboard</h1>
     <p>Welcome, Admin!</p>
@@ -45,7 +46,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     </div>
 
     <br><br>
-    <a href="logout.php">Logout</a>
+    <a href="../logout.php">Logout</a>
 </div>
 
 </body>

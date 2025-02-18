@@ -4,19 +4,144 @@
 }
 
 .sidebar_container{
-    
+    display: inline-block;
     width: 17rem;
     height: 100vh;
     background-color: rgb(41, 41, 41);
+    position: fixed;
 }
 
 
 .sidebar_container .logo {
     padding-top: 1rem;
-    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     color: white;
+}
+
+.sidebar_container .logo img {
+    width: 13rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+
+hr {
+    margin: 1rem ;
+    border: 1px solid rgb(114, 114, 114);
+}
+
+.sidenav ul li{
+    font-family: "Rubik", serif;
+    text-align: left;
+    padding: 1rem 3rem;
+    list-style: none;
+    font-size: 17px;
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
 
 }
+
+.sidenav ul li a{
+
+    color: white;
+}
+
+.sidenav ul li .bx{
+ margin-right: 10px;   
+}
+
+.sidenav ul li:hover{
+    background-color: white;
+    margin: 0 0.5rem;
+    border-radius: 10px;
+    transition: ease 0.5s;
+    color: rgb(0, 0, 0);
+}
+
+
+.sidenav ul li a:hover{
+    color: rgb(0, 0, 0);
+}
+
+
+
+
+.account {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 1rem; 
+    left: 1.5rem;  
+    border-top: 2px solid rgb(114, 114, 114);
+    width: 80%;
+}
+
+.account img {
+    margin-top: 20px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 10px; 
+}
+
+.username {
+    font-family: 'Rubik';
+    font-size: 15px;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+
+/* Style for the dropdown menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    left: 0;
+    bottom: 50px;
+
+    width: 200px;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu ul li {
+    margin: 20px 0;
+}
+
+.dropdown-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 10px;
+}
+
+.dropdown-menu ul li a:hover {
+    background-color: #555;
+}
+
+/* Style for the arrow when the menu is active */
+#dropdownToggle.rotate {
+    transform: rotate(180deg);
+}
+
+
+
+
+

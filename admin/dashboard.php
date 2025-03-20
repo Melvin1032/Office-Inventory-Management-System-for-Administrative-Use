@@ -19,6 +19,5 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 include '../includes/header.php';
 ?>
 
-
 </body>
 </html>

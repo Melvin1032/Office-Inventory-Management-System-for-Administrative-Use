@@ -1,80 +1,188 @@
 * {
     margin: 0;
     padding: 0;
-    
+    font-family: "Rubik", serif;
 }
 
-
-.container {
-    max-width: 1200px;
-    margin: auto;
+.table-title {
     text-align: center;
-    margin-left: 18rem;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+    margin-left: 10%;
+    padding: 2% 0 1%;
 }
 
-.container h1{
-    padding-top: 3rem;
-}
-
-table {
-    width: 100%;
+.inventory-table {
+    width: 77%;
     border-collapse: collapse;
-    margin-top: 2rem;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    margin-left: 20%;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
+.inventory-table thead {
+    background-color: #313131;
+    color: white;
+    text-align: left;
+}
+
+.inventory-table th, .inventory-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
     text-align: center;
 }
 
-th {
-    background-color: #f4f4f4;
+.inventory-table tbody tr:hover {
+    background-color: #f1f1f1;
 }
 
+/* Out of Stock Highlight */
 .out-of-stock {
     color: red;
     font-weight: bold;
 }
 
-.actions a {
-    margin: 0 5px;
-    text-decoration: none;
-    color: #007bff;
+/* Button Styles */
+.actions {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    
 }
 
-.actions a:hover {
-    text-decoration: underline;
-}
-
-.btn {
+button {
+    border: none;
     padding: 8px 12px;
-    text-decoration: none;
-    color: white;
-    border-radius: 4px;
-}
-
-.btn-danger {
-    background-color: #dc3545;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    font-size: 14px;
 }
 
 .btn-primary {
     background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a;
 }
 
 .btn-success {
-
+    padding: 10px;
+    border-radius: 30px;
     background-color: #28a745;
+    color: white;
+    text-align: center;
+    margin-left: 10%;
 }
 
-.btn:hover {
-    opacity: 0.8;
+.btn-success:hover {
+    background-color: #1e7e34;
 }
 
-.btn:active {
-    opacity: 1;
+/* Centered Add button container below the table */
+.add-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-.mb-3 {
-    margin-bottom: 1rem;
+
+/* REQUEST TABLE */
+
+.table-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+    margin-left: 10%;
+    padding: 2% 0 1%;
+}
+
+.request-table {
+    width: 77%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    margin-left: 20%;
+}
+
+.request-table thead {
+    background-color: #313131;
+    color: white;
+    text-align: left;
+}
+
+.request-table th, .request-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.request-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+td.action-links {
+    text-align: center;
+    padding: 10px;
+}
+
+
+td a {
+    text-decoration: none;
+    padding:5px 8px;
+    border-radius: 5px;
+    margin: 0 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+.approve-link {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.approve-link:hover {
+    background-color: #45a049; 
+}
+
+
+.reject-link {
+    background-color: #f44336;
+    color: white;
+}
+
+.reject-link:hover {
+    background-color: #e53935; 
+}
+
+
+td a {
+    border: 1px solid transparent;
+}
+
+.approve-link:hover,
+.reject-link:hover {
+    border: 1px solid #ddd;
 }

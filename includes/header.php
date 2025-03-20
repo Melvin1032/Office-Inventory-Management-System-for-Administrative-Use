@@ -1,31 +1,5 @@
 <?php
 require '../config/config.php';  // Make sure the database connection is established
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get login credentials from the form
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Prepare the query to check the user
-    $stmt = $pdo->prepare("SELECT id, username, role, password FROM users WHERE username = :username");
-    $stmt->execute(['username' => $username]);
-    $user = $stmt->fetch();
-
-    // Check if user exists and password is correct
-    if ($user && password_verify($password, $user['password'])) {
-        // Store user data in session
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];  // Save the username in the session
-        $_SESSION['role'] = $user['role'];
-
-        // Redirect to the dashboard or other page
-        header("Location: admin/dashboard.php");
-        exit();
-    } else {
-        // If authentication fails, show an error
-        echo "Invalid username or password.";
-    }
-}
 ?>
 
 
@@ -50,9 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
              <div class="sidenav">
                 <ul>
                     <a href="../admin/dashboard.php"> <li><i class='bx bx-home-alt' ></i>Home</li></a>
-                    <a href="../admin/inventory.php"><li><i class='bx bx-message-alt-edit'></i>Manage</li></a>
-                    <a href="../admin/generate_pdf.php"><li><i class='bx bxs-report' ></i>Inventory Report</li></a>
-                    <a href="../admin/generatelogs.php"><li><i class='bx bxs-copy-alt'></i>View Logs</li></a>
+                    <a href="../admin/inventory.php"><li><i class='bx bx-message-alt-edit'></i>Manage Inventory</li></a>
+                    <a href="../admin/approve_requests.php"><li><i class='bx bx-message-square-check' ></i>Requests</li></a>
+                    <a href="../admin/staff_accounts.php"><li><i class='bx bxs-user-account'></i>Staff Accounts</li></a>
+
+                    <a href="../admin/generate_pdf.php" target="_blank">
+                    <li><i class='bx bxs-report'></i>Inventory Report (PDF)</li>
+                </a>
+                <a href="../admin/generatelogs.php" target="_blank">
+                    <li><i class='bx bxs-copy-alt'></i>View Logs (PDF)</li>
+                </a>
                 </ul>
              </div>
         </div>

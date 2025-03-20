@@ -1,5 +1,5 @@
 <?php
-    require 'function/function.php';
+    require '../function/function.php';
 ?>
 
 <form method="post">

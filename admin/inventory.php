@@ -12,12 +12,12 @@
     <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
-<?php 
+    <?php 
     include '../includes/header.php';
-?>
-<div class="container">
-    <h1>Manage Inventory</h1>
-    <table>
+    ?>
+   
+   <h1 class="table-title">Manage Inventory</h1>
+    <table class="inventory-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -48,17 +48,22 @@
                         <button type="submit" class="btn btn-primary">Edit</button>
                     </form>
 
-                    <form action="inventory.php" method="POST" style="display:inline;">
+                    <form action="delete_inventory.php" method="POST" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                        <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
                 </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-    <br><br>
-    <a href="add_inventory.php" class="btn btn-success">Add New Item</a>
-</div>
-</body>
+
+    <div class="add-container">
+        <a href="add_inventory.php" class="btn btn-success">Add New Item</a>
+    </div>
+
+</body> 
+
+
+
 </html>

@@ -88,8 +88,11 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         die("Invalid request: Invalid ID or action.");
     }
 
-    // Fetch the request details
-    $stmt = $pdo->prepare("SELECT user_id, item_name, quantity FROM requests WHERE id = ?");
+    // Fetch the request details, including the username from the users table
+    $stmt = $pdo->prepare("SELECT r.id, u.username, r.item_name, r.quantity, r.status 
+                           FROM requests r
+                           JOIN users u ON r.user_id = u.id
+                           WHERE r.id = ?");
     $stmt->execute([$request_id]);
     $request = $stmt->fetch();
 
@@ -118,7 +121,8 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         $stmt->execute([$request_id]);
 
         // Insert approval log
-        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) 
+                               VALUES (?, ?, ?, ?, ?, ?, NOW())");
         $stmt->execute(["Request Approved", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity']]);
 
         header("Location: approve_requests.php?success=1");
@@ -129,7 +133,8 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         $stmt->execute([$request_id]);
 
         // Insert rejection log
-        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) 
+                               VALUES (?, ?, ?, ?, ?, ?, NOW())");
         $stmt->execute(["Request Rejected", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity']]);
 
         header("Location: approve_requests.php?success=1");
@@ -137,9 +142,13 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
     }
 }
 
-// Fetch all pending requests
-$stmt = $pdo->query("SELECT * FROM requests WHERE status = 'pending'");
+// Fetch all pending requests along with the username
+$stmt = $pdo->query("SELECT r.id, u.username, r.item_name, r.quantity, r.status 
+                     FROM requests r
+                     JOIN users u ON r.user_id = u.id
+                     WHERE r.status = 'pending'");
 $requests = $stmt->fetchAll();
 ?>
+
 
 

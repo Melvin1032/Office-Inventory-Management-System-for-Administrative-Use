@@ -1,5 +1,5 @@
-<?php
-require 'config/config.php';
+<!-- <?php
+require '../config/config.php';
 session_start();
 if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit(); }
 
@@ -9,4 +9,4 @@ $stmt->execute([$id]);
 
 header("Location: inventory.php");
 exit();
-?>
+?> -->

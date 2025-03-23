@@ -1,8 +1,12 @@
 <?php
-require '../config/config.php';  // Make sure the database connection is established
+require '../config/config.php'; // Make sure this file initializes $pdo properly
+
+
+// Fetch pending request count using PDO
+$query = "SELECT COUNT(*) AS pending_count FROM requests WHERE status = 'Pending'";
+$stmt = $pdo->query($query);
+$pendingCount = $stmt->fetchColumn();
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +29,13 @@ require '../config/config.php';  // Make sure the database connection is establi
                 <ul>
                     <a href="../admin/dashboard.php"> <li><i class='bx bx-home-alt' ></i>Home</li></a>
                     <a href="../admin/inventory.php"><li><i class='bx bx-message-alt-edit'></i>Manage Inventory</li></a>
-                    <a href="../admin/approve_requests.php"><li><i class='bx bx-message-square-check' ></i>Requests</li></a>
+                    <a href="../admin/approve_requests.php"><li><i class='bx bx-message-square-check'></i>Requests 
+             <?php if ($pendingCount > 0): ?>
+            <span class="notif-badge"><?= $pendingCount; ?></span>
+        <?php endif; ?>
+    </li>
+</a>
+
                     <a href="../admin/staff_accounts.php"><li><i class='bx bxs-user-account'></i>Staff Accounts</li></a>
 
                     <a href="../admin/generate_pdf.php" target="_blank">
@@ -81,7 +91,27 @@ window.addEventListener('click', function(event) {
         icon.classList.remove('rotate');
     }
 });
+    </script>
 
+<script>
+        // Toggle the dropdown menu
+        document.getElementById('dropdownToggle').addEventListener('click', function() {
+            var menu = document.getElementById('dropdownMenu');
+            var icon = document.getElementById('dropdownToggle');
+
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            icon.classList.toggle('rotate');
+        });
+
+        // Close the dropdown if clicked outside
+        window.addEventListener('click', function(event) {
+            var menu = document.getElementById('dropdownMenu');
+            var icon = document.getElementById('dropdownToggle');
+            if (!menu.contains(event.target) && event.target !== icon) {
+                menu.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        });
     </script>
 </body>
 </html>

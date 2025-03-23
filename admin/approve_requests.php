@@ -11,22 +11,22 @@
     <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
-<?php 
-include '../includes/header.php';
-?>
+<?php include '../includes/header.php';?>
+
    <h1 class="table-title">Staff Requests</h1>
 
     <?php if (isset($_GET['success'])): ?>
         <p class="message">Request updated successfully!</p>
     <?php endif; ?>
 
-    <table class="request-table">\
+    <table class="request-table">
     <thead>
         <tr>
             <th>Request ID</th>
             <th>Requested By </th>
             <th>Item Name</th>
             <th>Quantity</th>
+            <th>Unit</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -37,6 +37,7 @@ include '../includes/header.php';
                 <td><?= htmlspecialchars($request['username']) ?></td>
                 <td><?= htmlspecialchars($request['item_name']) ?></td>
                 <td><?= htmlspecialchars($request['quantity']) ?></td>
+                <td><?= htmlspecialchars($request['unit']) ?></td>
                 <td><?= htmlspecialchars($request['status']) ?></td>
                 <td class="action-links">
     <a href="approve_requests.php?id=<?= $request['id'] ?>&action=approve" 

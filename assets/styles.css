@@ -186,3 +186,30 @@ td a {
 .reject-link:hover {
     border: 1px solid #ddd;
 }
+
+
+
+
+
+
+
+/* added columns lines */
+
+/* Apply border between columns */
+.inventory-table th, .inventory-table td, .request-table th, .request-table td {
+    padding: 12px;
+    text-align: center;
+    border-left: 1px solid #ddd;  /* Adds a line between columns */
+}
+
+/* Remove the left border for the first column */
+.inventory-table th:first-child, .inventory-table td:first-child,
+.request-table th:first-child, .request-table td:first-child {
+    border-left: none;
+}
+
+/* Optional: Style for the last column if you want a border at the end */
+.inventory-table th:last-child, .inventory-table td:last-child,
+.request-table th:last-child, .request-table td:last-child {
+    border-right: 1px solid #f1f1f1; /* Optional: Adds a line on the right side of the last column */
+}

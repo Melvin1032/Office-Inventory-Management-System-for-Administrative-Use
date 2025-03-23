@@ -20,11 +20,12 @@
     <table class="inventory-table">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Item Stock No.</th>
                 <th>Item Name</th>
                 <th>Category</th>
                 <th>Supplier</th>
                 <th>Quantity</th>
+                <th>Unit</th>
                 <th>Status</th>
                 <th>Acquisition Date</th>
                 <th>Actions</th>
@@ -33,25 +34,26 @@
         <tbody>
             <?php foreach ($items as $item): ?>
             <tr>
-                <td><?= htmlspecialchars($item["id"]) ?></td>
+                <td><?= htmlspecialchars($item["stock_num"]) ?></td>
                 <td><?= htmlspecialchars($item["item_name"]) ?></td>
                 <td><?= htmlspecialchars($item["category"]) ?></td>
                 <td><?= htmlspecialchars($item["supplier"]) ?></td>
-                <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>">
-                    <?= htmlspecialchars($item["quantity"]) ?>
+                <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>"><?= htmlspecialchars($item["quantity"]) ?>
                 </td>
+                <td><?= htmlspecialchars($item["unit"]) ?></td>
                 <td><?= htmlspecialchars($item["stock_status"]) ?></td>
                 <td><?= htmlspecialchars($item["last_updated"]) ?></td>
                 <td class="actions">
-                    <form action="edit_inventory.php" method="GET" style="display:inline;">
+                    <form method="GET" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $item['id'] ?>">
                         <button type="submit" class="btn btn-primary">Edit</button>
                     </form>
 
-                    <form action="delete_inventory.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    <form method="POST" style="display:inline;">
+                     <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                     <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
+
                 </td>
             </tr>
             <?php endforeach; ?>

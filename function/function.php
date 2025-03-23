@@ -1,21 +1,41 @@
-<!-- ADD INVENTORY -->
+<!-- SESSION CHECK -->
 
 <?php
 require '../config/config.php';
 session_start();
+
 if (!isset($_SESSION['user_id'])) { 
     header("Location: login.php"); 
     exit(); 
 }
+?>
+
+<!-- ADD INVENTORY -->
+
+<?php
 
 if (isset($_POST['add'])) {
-    $item_name = $_POST["item_name"];
+    $category_prefixes = [
+        'Office Supplies' => '(1010)',
+        'Janitorial Supplies' => '(2020)',
+        'Electrical Supplies' => '(3030)',
+    ];
+    
     $category = $_POST["category"];
+    
+    $category_prefix = isset($category_prefixes[$category]) ? $category_prefixes[$category] : '0000';
+    
+    $random_number = rand(100, 999);
+    
+    $stock_num = $category_prefix . $random_number;
+    
+    $item_name = $_POST["item_name"];
     $supplier = $_POST["supplier"];
     $quantity = $_POST["quantity"];
+    $unit = $_POST["unit"];
 
-    $stmt = $pdo->prepare("INSERT INTO inventory (item_name, category, supplier, quantity) VALUES (?, ?, ?, ?)");
-    if ($stmt->execute([$item_name, $category, $supplier, $quantity])) {
+    $stmt = $pdo->prepare("INSERT INTO inventory (stock_num, item_name, category, supplier, quantity, unit) VALUES (?, ?, ?, ?, ?, ?)");
+    if ($stmt->execute([$stock_num, $item_name, $category, $supplier, $quantity, $unit])) {
         echo "Item added successfully. <a href='inventory.php'>View Inventory</a>";
     } else {
         echo "Error adding item.";
@@ -23,13 +43,16 @@ if (isset($_POST['add'])) {
 }
 ?>
 
+
+
+
+
 <!-- VIEW INVENTORY -->
 
 <?php
-require '../config/config.php';
-if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit(); }
 
-$stmt = $pdo->query("SELECT id, item_name, category, quantity, supplier, last_updated,
+
+$stmt = $pdo->query("SELECT id, stock_num, item_name, category, quantity, unit, supplier, last_updated,
     CASE 
         WHEN quantity = 0 THEN 'Out of Stock' 
         ELSE 'In Stock' 
@@ -38,20 +61,17 @@ FROM inventory");
 $items = $stmt->fetchAll();
 ?>
 
-<!-- Delete Inventory -->
+
+
+<!-- DELETE INVENTORY -->
 
 <?php
-require '../config/config.php';
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
 
 if (isset($_POST['delete'])) {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
 
+        // Prepare and execute the DELETE query
         $stmt = $pdo->prepare("DELETE FROM inventory WHERE id = ?");
         if ($stmt->execute([$id])) {
             header("Location: inventory.php?message=Item deleted successfully");
@@ -68,13 +88,14 @@ if (isset($_POST['delete'])) {
 ?>
 
 
+
 <!-- APPROVE REQUESTS -->
 
 <?php
-require '../config/config.php';
+
 
 // Ensure admin is logged in
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+if ($_SESSION['role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
@@ -89,7 +110,7 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
     }
 
     // Fetch the request details, including the username from the users table
-    $stmt = $pdo->prepare("SELECT r.id, u.username, r.item_name, r.quantity, r.status 
+    $stmt = $pdo->prepare("SELECT r.id, u.username, r.user_id, r.item_name, r.quantity, r.unit, r.status 
                            FROM requests r
                            JOIN users u ON r.user_id = u.id
                            WHERE r.id = ?");
@@ -121,9 +142,9 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         $stmt->execute([$request_id]);
 
         // Insert approval log
-        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) 
-                               VALUES (?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->execute(["Request Approved", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity']]);
+        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, unit, created_at) 
+                               VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->execute(["Request Approved", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity'], $request['unit']]);
 
         header("Location: approve_requests.php?success=1");
         exit();
@@ -132,23 +153,53 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         $stmt = $pdo->prepare("UPDATE requests SET status = 'rejected' WHERE id = ?");
         $stmt->execute([$request_id]);
 
-        // Insert rejection log
-        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, created_at) 
-                               VALUES (?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->execute(["Request Rejected", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity']]);
-
         header("Location: approve_requests.php?success=1");
         exit();
     }
 }
 
 // Fetch all pending requests along with the username
-$stmt = $pdo->query("SELECT r.id, u.username, r.item_name, r.quantity, r.status 
+$stmt = $pdo->query("SELECT r.id, u.username, r.item_name, r.quantity, r.unit, r.status 
                      FROM requests r
                      JOIN users u ON r.user_id = u.id
-                     WHERE r.status = 'pending'");
+                     WHERE r.status = 'Pending'");
 $requests = $stmt->fetchAll();
 ?>
 
 
 
+
+<!-- VIEW STAFF ACCOUNTS -->
+
+<?php
+
+$stmt = $pdo->query("SELECT id, username, role, created_at FROM users");
+$user = $stmt->fetchAll();
+?>
+
+
+
+
+<!-- DELETE STAFF ACCOUNTS -->
+
+<?php
+
+if (isset($_POST['delete_user'])) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+
+        // Prepare and execute the DELETE query
+        $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+        if ($stmt->execute([$id])) {
+            header("Location: staff_accounts.php?message=Item deleted successfully");
+            exit();
+        } else {
+            header("Location: staff_accounts.php?error=Failed to delete item");
+            exit();
+        }
+    } else {
+        header("Location: staff_accounts.php?error=No item ID provided");
+        exit();
+    }
+}
+?>

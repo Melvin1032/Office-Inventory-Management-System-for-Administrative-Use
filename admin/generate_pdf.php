@@ -62,7 +62,7 @@ $startX = (297 - 250) / 2; // (page width - table width) / 2
 $pdf->SetX($startX);
 
 // Output column headers
-$pdf->Cell(30, 10, 'Stock No.', 1, 0, 'C', true);
+$pdf->Cell(30, 10, 'Stock ID No.', 1, 0, 'C', true);
 $pdf->Cell(40, 10, 'Item Name', 1, 0, 'C', true);
 $pdf->Cell(40, 10, 'Category', 1, 0, 'C', true);
 $pdf->Cell(50, 10, 'Supplier', 1, 0, 'C', true);

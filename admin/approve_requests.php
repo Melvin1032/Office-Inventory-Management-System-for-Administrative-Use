@@ -7,8 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Requests</title>
-    <link rel="stylesheet" href="../includes/includes.css">
-    <link rel="stylesheet" href="../assets/styles.css">
+    <link rel="stylesheet" href="../assets/table_styles.css">
 </head>
 <body>
 <?php include '../includes/header.php';?>

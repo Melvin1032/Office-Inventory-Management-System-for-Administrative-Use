@@ -18,7 +18,7 @@ $pendingCount = $stmt->fetchColumn();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="includes.css">
+    <link rel="stylesheet" href="../includes/header.css">
 </head>
 <body>
     <div class="sidebar_container">
@@ -93,25 +93,6 @@ window.addEventListener('click', function(event) {
 });
     </script>
 
-<script>
-        // Toggle the dropdown menu
-        document.getElementById('dropdownToggle').addEventListener('click', function() {
-            var menu = document.getElementById('dropdownMenu');
-            var icon = document.getElementById('dropdownToggle');
-
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-            icon.classList.toggle('rotate');
-        });
-
-        // Close the dropdown if clicked outside
-        window.addEventListener('click', function(event) {
-            var menu = document.getElementById('dropdownMenu');
-            var icon = document.getElementById('dropdownToggle');
-            if (!menu.contains(event.target) && event.target !== icon) {
-                menu.style.display = 'none';
-                icon.classList.remove('rotate');
-            }
-        });
-    </script>
+    
 </body>
 </html>

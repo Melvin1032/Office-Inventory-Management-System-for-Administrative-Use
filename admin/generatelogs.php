@@ -60,7 +60,7 @@ $pdf->SetX($startX);
 // Column headers with background color and bold font
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->SetFillColor(200, 220, 255); // Light blue for header background
-$pdf->Cell(40, 10, 'Operation', 1, 0, 'C', true);
+$pdf->Cell(40, 10, 'Stock ID No.', 1, 0, 'C', true);
 $pdf->Cell(40, 10, 'Requested By', 1, 0, 'C', true);
 $pdf->Cell(40, 10, 'Approved By', 1, 0, 'C', true);
 $pdf->Cell(50, 10, 'Item Name', 1, 0, 'C', true);
@@ -70,7 +70,7 @@ $pdf->Cell(60, 10, 'Acquisition Date', 1, 1, 'C', true);
 
 // Fetch log data with all the desired columns
 $stmt_logs = $pdo->query("
-    SELECT logs.id, logs.operation, req.username AS requested_by, 
+    SELECT logs.id, logs.stock_num, logs.operation, req.username AS requested_by, 
            app.username AS approved_by, logs.item_name, logs.quantity, logs.unit, logs.created_at 
     FROM logs 
     JOIN users req ON logs.requested_by = req.id
@@ -91,7 +91,7 @@ if ($stmt_logs->rowCount() > 0) {
         $pdf->SetX($startX);
 
         // Output the row data
-        $pdf->Cell(40, 10, $log['operation'], 1, 0, 'C', false);
+        $pdf->Cell(40, 10, $log['stock_num'], 1, 0, 'C', false);
         $pdf->Cell(40, 10, $log['requested_by'], 1, 0, 'C', false);
         $pdf->Cell(40, 10, $approvedBy, 1, 0, 'C', false);
         $pdf->Cell(50, 10, $log['item_name'], 1, 0, 'C', false);

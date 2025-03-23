@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 <!-- ADD INVENTORY -->
 
 <?php
+// Assuming you have already established a PDO connection in $pdo
 
 if (isset($_POST['add'])) {
     $category_prefixes = [
@@ -23,18 +24,30 @@ if (isset($_POST['add'])) {
     
     $category = $_POST["category"];
     
+    // Get the category prefix or default to '0000'
     $category_prefix = isset($category_prefixes[$category]) ? $category_prefixes[$category] : '0000';
     
-    $random_number = rand(100, 999);
-    
-    $stock_num = $category_prefix . $random_number;
-    
+    // Generate a unique stock number
+    do {
+        $random_number = rand(100, 999);
+        $stock_num = $category_prefix . $random_number;
+
+        // Check if the stock number already exists
+        $check_stmt = $pdo->prepare("SELECT COUNT(*) FROM inventory WHERE stock_num = ?");
+        $check_stmt->execute([$stock_num]);
+        $exists = $check_stmt->fetchColumn();
+    } while ($exists > 0); // Repeat until a unique stock number is found
+
+    // Get the item details from the form
     $item_name = $_POST["item_name"];
     $supplier = $_POST["supplier"];
     $quantity = $_POST["quantity"];
     $unit = $_POST["unit"];
 
+    // Prepare the SQL statement to insert the new inventory item
     $stmt = $pdo->prepare("INSERT INTO inventory (stock_num, item_name, category, supplier, quantity, unit) VALUES (?, ?, ?, ?, ?, ?)");
+    
+    // Execute the statement and check for success
     if ($stmt->execute([$stock_num, $item_name, $category, $supplier, $quantity, $unit])) {
         echo "Item added successfully. <a href='inventory.php'>View Inventory</a>";
     } else {
@@ -42,8 +55,6 @@ if (isset($_POST['add'])) {
     }
 }
 ?>
-
-
 
 
 
@@ -93,13 +104,6 @@ if (isset($_POST['delete'])) {
 
 <?php
 
-
-// Ensure admin is logged in
-if ($_SESSION['role'] !== 'admin') {
-    header("Location: login.php");
-    exit();
-}
-
 // Process Approve/Reject action if parameters exist
 if (isset($_GET['id']) && isset($_GET['action'])) {
     $request_id = intval($_GET['id']);
@@ -109,52 +113,64 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         die("Invalid request: Invalid ID or action.");
     }
 
-    // Fetch the request details, including the username from the users table
-    $stmt = $pdo->prepare("SELECT r.id, u.username, r.user_id, r.item_name, r.quantity, r.unit, r.status 
+    // Fetch the request details including stock number
+    $stmt = $pdo->prepare("SELECT r.id, u.username, r.user_id, r.item_name, r.quantity, r.unit, r.status, i.stock_num 
                            FROM requests r
                            JOIN users u ON r.user_id = u.id
+                           LEFT JOIN inventory i ON r.item_name = i.item_name
                            WHERE r.id = ?");
     $stmt->execute([$request_id]);
-    $request = $stmt->fetch();
+    $request = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$request) {
         die("Action failed: Request not found.");
     }
 
     $approved_by = $_SESSION['user_id']; // Admin ID
+    $stock_num = $request['stock_num'] ?? 'N/A'; // Default if NULL
 
-    if ($action === 'approve') {
-        // Check if the item exists in inventory
-        $stmt = $pdo->prepare("SELECT quantity FROM inventory WHERE item_name = ?");
-        $stmt->execute([$request['item_name']]);
-        $inventory = $stmt->fetch();
+    try {
+        $pdo->beginTransaction(); // Start transaction
 
-        if (!$inventory || $inventory['quantity'] < $request['quantity']) {
-            die("Approval failed: Not enough stock in inventory.");
+        if ($action === 'approve') {
+            // Check if the item exists in inventory and has enough stock
+            $stmt = $pdo->prepare("SELECT quantity FROM inventory WHERE item_name = ?");
+            $stmt->execute([$request['item_name']]);
+            $inventory = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$inventory || $inventory['quantity'] < $request['quantity']) {
+                throw new Exception("Approval failed: Not enough stock in inventory.");
+            }
+
+            // Deduct the requested quantity from inventory
+            $stmt = $pdo->prepare("UPDATE inventory SET quantity = quantity - ? WHERE item_name = ?");
+            $stmt->execute([$request['quantity'], $request['item_name']]);
+
+            // Approve the request
+            $stmt = $pdo->prepare("UPDATE requests SET status = 'approved' WHERE id = ?");
+            $stmt->execute([$request_id]);
+
+            // Insert approval log
+            $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, stock_num, item_name, quantity, unit, created_at) 
+                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+            $stmt->execute([
+                "Request Approved", $approved_by, $request['user_id'], $approved_by,
+                $stock_num, $request['item_name'], $request['quantity'], $request['unit']
+            ]);
+
+        } elseif ($action === 'reject') {
+            // Reject the request
+            $stmt = $pdo->prepare("UPDATE requests SET status = 'rejected' WHERE id = ?");
+            $stmt->execute([$request_id]);
         }
 
-        // Deduct the requested quantity from inventory
-        $stmt = $pdo->prepare("UPDATE inventory SET quantity = quantity - ? WHERE item_name = ?");
-        $stmt->execute([$request['quantity'], $request['item_name']]);
-
-        // Approve the request
-        $stmt = $pdo->prepare("UPDATE requests SET status = 'approved' WHERE id = ?");
-        $stmt->execute([$request_id]);
-
-        // Insert approval log
-        $stmt = $pdo->prepare("INSERT INTO logs (operation, user_id, requested_by, approved_by, item_name, quantity, unit, created_at) 
-                               VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->execute(["Request Approved", $approved_by, $request['user_id'], $approved_by, $request['item_name'], $request['quantity'], $request['unit']]);
-
+        $pdo->commit(); // Commit transaction
         header("Location: approve_requests.php?success=1");
         exit();
-    } elseif ($action === 'reject') {
-        // Reject the request
-        $stmt = $pdo->prepare("UPDATE requests SET status = 'rejected' WHERE id = ?");
-        $stmt->execute([$request_id]);
 
-        header("Location: approve_requests.php?success=1");
-        exit();
+    } catch (Exception $e) {
+        $pdo->rollBack(); // Rollback if any error occurs
+        die("Error: " . $e->getMessage());
     }
 }
 
@@ -163,7 +179,7 @@ $stmt = $pdo->query("SELECT r.id, u.username, r.item_name, r.quantity, r.unit, r
                      FROM requests r
                      JOIN users u ON r.user_id = u.id
                      WHERE r.status = 'Pending'");
-$requests = $stmt->fetchAll();
+$requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 

@@ -10,51 +10,66 @@ if (!isset($_SESSION['user_id'])) {
 }
 ?>
 
+
 <!-- ADD INVENTORY -->
 
+<!-- ADD INVENTORY -->
 <?php
-// Assuming you have already established a PDO connection in $pdo
-
 if (isset($_POST['add'])) {
     $category_prefixes = [
         'Office Supplies' => '(1010)',
         'Janitorial Supplies' => '(2020)',
         'Electrical Supplies' => '(3030)',
     ];
-    
-    $category = $_POST["category"];
-    
-    // Get the category prefix or default to '0000'
-    $category_prefix = isset($category_prefixes[$category]) ? $category_prefixes[$category] : '0000';
-    
-    // Generate a unique stock number
-    do {
-        $random_number = rand(100, 999);
-        $stock_num = $category_prefix . $random_number;
 
-        // Check if the stock number already exists
-        $check_stmt = $pdo->prepare("SELECT COUNT(*) FROM inventory WHERE stock_num = ?");
-        $check_stmt->execute([$stock_num]);
-        $exists = $check_stmt->fetchColumn();
-    } while ($exists > 0); // Repeat until a unique stock number is found
-
-    // Get the item details from the form
-    $item_name = $_POST["item_name"];
     $supplier = $_POST["supplier"];
-    $quantity = $_POST["quantity"];
-    $unit = $_POST["unit"];
+    $categories = $_POST["category"];
+    $item_names = $_POST["item_name"];
+    $quantities = $_POST["quantity"];
+    $units = $_POST["unit"];
 
-    // Prepare the SQL statement to insert the new inventory item
-    $stmt = $pdo->prepare("INSERT INTO inventory (stock_num, item_name, category, supplier, quantity, unit) VALUES (?, ?, ?, ?, ?, ?)");
-    
-    // Execute the statement and check for success
-    if ($stmt->execute([$stock_num, $item_name, $category, $supplier, $quantity, $unit])) {
-        echo "Item added successfully. <a href='inventory.php'>View Inventory</a>";
-    } else {
-        echo "Error adding item.";
+    // Generate a unique batch_id for this submission
+    $batch_id = date('YmdHis') . rand(1000, 9999);
+
+    $pdo->beginTransaction(); // Start transaction to ensure data integrity
+
+    try {
+        for ($i = 0; $i < count($item_names); $i++) {
+            $category = $categories[$i];
+            $item_name = $item_names[$i];
+            $quantity = $quantities[$i];
+            $unit = $units[$i];
+
+            // Generate Stock Number
+            $category_prefix = isset($category_prefixes[$category]) ? $category_prefixes[$category] : '(0000)';
+            do {
+                $random_number = rand(100, 999);
+                $stock_num = $category_prefix . $random_number;
+                $check_stmt = $pdo->prepare("SELECT COUNT(*) FROM inventory WHERE stock_num = ?");
+                $check_stmt->execute([$stock_num]);
+                $exists = $check_stmt->fetchColumn();
+            } while ($exists > 0);
+
+            // Insert into inventory with batch_id
+            $stmt = $pdo->prepare("INSERT INTO inventory (batch_id, stock_num, item_name, category, supplier, quantity, unit) 
+                                   VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$batch_id, $stock_num, $item_name, $category, $supplier, $quantity, $unit]);
+
+            // Log the delivery in delivery_logs with batch_id
+            $log_stmt = $pdo->prepare("INSERT INTO delivery_logs (batch_id, supplier, stock_num, item_name, category, quantity, unit) 
+                                       VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $log_stmt->execute([$batch_id, $supplier, $stock_num, $item_name, $category, $quantity, $unit]);
+        }
+
+        $pdo->commit(); // Commit transaction
+    } catch (Exception $e) {
+        $pdo->rollBack(); // Rollback if any error occurs
+        echo "Error: " . $e->getMessage();
     }
 }
 ?>
+
+
 
 
 

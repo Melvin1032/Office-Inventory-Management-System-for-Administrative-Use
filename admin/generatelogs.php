@@ -1,6 +1,7 @@
 <?php
 require('../fpdf186/fpdf.php');
 require '../config/config.php';
+session_start();
 
 // Create PDF instance
 $pdf = new FPDF('L');

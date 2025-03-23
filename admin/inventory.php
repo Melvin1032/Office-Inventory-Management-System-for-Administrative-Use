@@ -11,11 +11,8 @@
     <link rel="stylesheet" href="../assets/table_styles.css">
 </head>
 <body>
-    <?php 
-    include '../includes/header.php';
-    ?>
-   
-   <h1 class="table-title">Manage Inventory</h1>
+<?php include '../includes/header.php'; ?>
+    <h1 class="table-title">Manage Inventory</h1>
     <table class="inventory-table">
         <thead>
             <tr>
@@ -37,22 +34,20 @@
                 <td><?= htmlspecialchars($item["item_name"]) ?></td>
                 <td><?= htmlspecialchars($item["category"]) ?></td>
                 <td><?= htmlspecialchars($item["supplier"]) ?></td>
-                <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>"><?= htmlspecialchars($item["quantity"]) ?>
-                </td>
+                <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>"><?= htmlspecialchars($item["quantity"]) ?></td>
                 <td><?= htmlspecialchars($item["unit"]) ?></td>
                 <td><?= htmlspecialchars($item["stock_status"]) ?></td>
                 <td><?= htmlspecialchars($item["last_updated"]) ?></td>
-                <td class="actions">
-                    <form method="GET" style="display:inline;">
+                <td>
+                <form method="GET" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $item['id'] ?>">
                         <button type="submit" class="btn btn-primary">Edit</button>
                     </form>
 
                     <form method="POST" style="display:inline;">
-                     <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                     <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                        <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
-
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -60,10 +55,89 @@
     </table>
 
     <div class="add-container">
-        <a href="add_inventory.php" class="btn btn-success">Add New Item</a>
+        <button class="btn btn-success" onclick="openModal()">Add New Item</button>
     </div>
 
-</body> 
+    <!-- Add Inventory Modal -->
+    <div id="addInventoryModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <h2>Add Inventory Items</h2>
+            <form method="post">
+                
+                <label for="supplier">Supplier:</label>
+                <input type="text" name="supplier" placeholder="Name of Supplier" required>
+
+                <div id="inventory-items">
+                    <div class="item-row">
+                        <select name="category[]" required>
+                            <option value="">Select Category</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                            <option value="Janitorial Supplies">Janitorial Supplies</option>
+                            <option value="Electrical Supplies">Electrical Supplies</option>
+                        </select>
+
+                        <input type="text" name="item_name[]" placeholder="Item Name" required>
+                        <input type="number" name="quantity[]" placeholder="Quantity" required>
+
+                        <select name="unit[]" required>
+                            <option value="">Units</option>
+                            <option value="Reams">Reams</option>
+                            <option value="Piece/s">Piece/s</option>
+                        </select>
+
+                        <button type="button" class="remove-btn" onclick="removeItem(this)">X</button>
+                    </div>
+                </div>
+
+                <button type="button" class="add-btn" onclick="addItem()">+ Add More Items</button>
+                <button type="submit" name="add" class="submit-btn">Submit Inventory</button>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("addInventoryModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("addInventoryModal").style.display = "none";
+        }
+
+        function addItem() {
+            let container = document.getElementById('inventory-items');
+            let newRow = document.createElement('div');
+            newRow.classList.add('item-row');
+            newRow.innerHTML = `
+                <select name="category[]" required>
+                    <option value="">Select Category</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                    <option value="Janitorial Supplies">Janitorial Supplies</option>
+                    <option value="Electrical Supplies">Electrical Supplies</option>
+                </select>
+
+                <input type="text" name="item_name[]" placeholder="Item Name" required>
+                <input type="number" name="quantity[]" placeholder="Quantity" required>
+
+                <select name="unit[]" required>
+                    <option value="">Units</option>
+                    <option value="Reams">Reams</option>
+                    <option value="Piece/s">Piece/s</option>
+                </select>
+
+                <button type="button" class="remove-btn" onclick="removeItem(this)">X</button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        function removeItem(button) {
+            button.parentElement.remove();
+        }
+    </script>
+
+</body>
 
 
 

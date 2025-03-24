@@ -14,9 +14,14 @@
 
 </head>
 <body>
-<?php include '../includes/header.php';?>
+<?php include '../includes/sidebar.php'; ?>
 
-  <h1 class="table-title">Staff Accounts</h1>
+<div class="staff-content">
+        <div class="dashboard-header">
+            <h1>Staff Accounts</h1>
+            <p>Welcome, Admin</p>
+        </div>
+
     <table class="accounts-table">
         <thead>
             <tr>
@@ -47,5 +52,6 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
 </body>
 </html>

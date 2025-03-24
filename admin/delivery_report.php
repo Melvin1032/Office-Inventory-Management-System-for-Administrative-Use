@@ -99,7 +99,7 @@ if (count($batches) > 0) {
             }
 
             // Add spacing between batches
-            $pdf->Ln(5);
+            $pdf->Ln(20);
 
             
             $loggedInAdmin = isset($_SESSION['username']) ? $_SESSION['username'] : 'Admin';
@@ -108,21 +108,21 @@ if (count($batches) > 0) {
 
             $loggedInAdmin = isset($_SESSION['username']) ? $_SESSION['username'] : 'Admin';
 
-            $pdf->Ln(10); // Add spacing before the section
+            $pdf->Ln(10); 
             
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(0, 6, "Received by:", 0, 1, 'C'); // Label Centered
+            $pdf->Cell(0, 6, "Received by:", 0, 1, 'C'); 
             
-            $pdf->SetFont('Arial', 'B', 12); // Bold 
-            $pdf->Cell(0, 6, $loggedInAdmin, 0, 1, 'C'); // Name Centered
+            $pdf->SetFont('Arial', 'B', 12); 
+            $pdf->Cell(0, 6, $loggedInAdmin, 0, 1, 'C');
             
             $pdf->Ln(5); // Add spacing
             
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(0, 6, "Verified by:", 0, 1, 'C'); // Label Centered
+            $pdf->Cell(0, 6, "Verified by:", 0, 1, 'C');
             
             $pdf->SetFont('Arial', 'B', 12);
-            $pdf->Cell(0, 6, "Lebron James - HEAD SUPPLY OFFICER", 0, 1, 'C'); // Name Centered
+            $pdf->Cell(0, 6, "Lebron James - HEAD SUPPLY OFFICER", 0, 1, 'C');
             
             
             

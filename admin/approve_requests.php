@@ -10,9 +10,14 @@
     <link rel="stylesheet" href="../assets/table_styles.css">
 </head>
 <body>
-<?php include '../includes/header.php';?>
+<?php include '../includes/sidebar.php'; ?>
 
-   <h1 class="table-title">Staff Requests</h1>
+
+<div class="inventory-content">
+        <div class="dashboard-header">
+            <h1>Approve Requests</h1>
+            <p>Welcome, Admin</p>
+        </div>
 
     <?php if (isset($_GET['success'])): ?>
         <p class="message">Request updated successfully!</p>
@@ -49,6 +54,6 @@
             </tr>
         <?php endforeach; ?>
     </table>
-
+    </div>
 </body>
 </html>

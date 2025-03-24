@@ -11,8 +11,13 @@
     <link rel="stylesheet" href="../assets/table_styles.css">
 </head>
 <body>
-<?php include '../includes/header.php'; ?>
-    <h1 class="table-title">Manage Inventory</h1>
+<?php include '../includes/sidebar.php'; ?>
+
+<div class="inventory-content">
+        <div class="dashboard-header">
+            <h1>Manage Inventory</h1>
+            <p>Welcome, Admin</p>
+        </div>
     <table class="inventory-table">
         <thead>
             <tr>
@@ -53,7 +58,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-
+    </div>
     <div class="add-container">
         <button class="btn btn-success" onclick="openModal()">Add New Item</button>
     </div>
@@ -96,49 +101,7 @@
             </form>
         </div>
     </div>
-
-    <script>
-        function openModal() {
-            document.getElementById("addInventoryModal").style.display = "flex";
-        }
-
-        function closeModal() {
-            document.getElementById("addInventoryModal").style.display = "none";
-        }
-
-        function addItem() {
-            let container = document.getElementById('inventory-items');
-            let newRow = document.createElement('div');
-            newRow.classList.add('item-row');
-            newRow.innerHTML = `
-                <select name="category[]" required>
-                    <option value="">Select Category</option>
-                    <option value="Office Supplies">Office Supplies</option>
-                    <option value="Janitorial Supplies">Janitorial Supplies</option>
-                    <option value="Electrical Supplies">Electrical Supplies</option>
-                </select>
-
-                <input type="text" name="item_name[]" placeholder="Item Name" required>
-                <input type="number" name="quantity[]" placeholder="Quantity" required>
-
-                <select name="unit[]" required>
-                    <option value="">Units</option>
-                    <option value="Reams">Reams</option>
-                    <option value="Piece/s">Piece/s</option>
-                </select>
-
-                <button type="button" class="remove-btn" onclick="removeItem(this)">X</button>
-            `;
-            container.appendChild(newRow);
-        }
-
-        function removeItem(button) {
-            button.parentElement.remove();
-        }
-    </script>
-
 </body>
 
-
-
+<script src="../assets/modal.js"></script>
 </html>

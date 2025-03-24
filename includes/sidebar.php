@@ -18,7 +18,7 @@ $pendingCount = $stmt->fetchColumn();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="../includes/header.css">
+    <link rel="stylesheet" href="../includes/sidebar.css">
 </head>
 <body>
     <div class="sidebar_container">

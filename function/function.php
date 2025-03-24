@@ -72,7 +72,6 @@ if (isset($_POST['add'])) {
 
 
 
-
 <!-- VIEW INVENTORY -->
 
 <?php
@@ -233,4 +232,30 @@ if (isset($_POST['delete_user'])) {
         exit();
     }
 }
+?>
+
+
+<!-- FOR ADMIN DASHBOARD TO VIEW DATA -->
+
+<?php
+
+
+    // Fetch data from database
+    $stmt = $pdo->query("SELECT COUNT(*) FROM inventory");
+    $total_inventory = $stmt->fetchColumn() ?? 0;
+
+    $stmt = $pdo->query("SELECT COUNT(*) FROM requests WHERE status = 'Pending'");
+    $pending_requests = $stmt->fetchColumn() ?? 0;
+
+    $stmt = $pdo->query("SELECT COUNT(*) FROM requests WHERE status = 'Approved'");
+    $approved_requests = $stmt->fetchColumn() ?? 0;
+
+    $stmt = $pdo->query("SELECT COUNT(DISTINCT supplier) FROM inventory");
+    $total_suppliers = $stmt->fetchColumn() ?? 0;
+
+    $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'staff'");
+    $total_staff = $stmt->fetchColumn() ?? 0;
+
+    $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'admin'");
+    $total_admin = $stmt->fetchColumn() ?? 0;
 ?>

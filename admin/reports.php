@@ -11,7 +11,13 @@
     <title>Reports Logs</title>
 </head>
 <body>
-    <?php include '../includes/header.php'; ?>
+<?php include '../includes/sidebar.php'; ?>
+
+<div class="reports-content">
+        <div class="dashboard-header">
+            <h1>Report Logs</h1>
+            <p>Welcome, Admin</p>
+        </div>
 
                         <!-- Reports Dashboard Section -->
                         <div class="reports-dashboard">
@@ -45,6 +51,7 @@
                 </ul>
              </div>
         </div>
+    </div>
 </body>
 
 <script>

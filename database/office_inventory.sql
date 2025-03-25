@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2025 at 03:43 AM
+-- Generation Time: Mar 25, 2025 at 12:31 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.4
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,16 +24,37 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `delivery_logs`
+--
+
+CREATE TABLE `delivery_logs` (
+  `id` int(11) NOT NULL,
+  `supplier` varchar(255) NOT NULL,
+  `stock_num` varchar(50) NOT NULL,
+  `item_name` varchar(255) NOT NULL,
+  `category` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `unit` varchar(50) NOT NULL,
+  `delivery_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `batch_id` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `inventory`
 --
 
 CREATE TABLE `inventory` (
   `id` int(11) NOT NULL,
+  `stock_num` varchar(255) NOT NULL,
   `item_name` varchar(100) NOT NULL,
   `category` varchar(50) NOT NULL,
   `supplier` varchar(220) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `unit` varchar(255) NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `batch_id` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -45,9 +66,10 @@ CREATE TABLE `inventory` (
 CREATE TABLE `logs` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `action` varchar(255) DEFAULT NULL,
+  `stock_num` varchar(255) NOT NULL,
   `item_name` varchar(255) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
+  `unit` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `requested_by` varchar(200) NOT NULL,
   `approved_by` int(11) NOT NULL,
@@ -63,9 +85,11 @@ CREATE TABLE `logs` (
 CREATE TABLE `requests` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `stock_num` varchar(255) NOT NULL,
   `item_name` varchar(255) NOT NULL,
   `item_id` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
+  `unit` varchar(255) NOT NULL,
   `status` enum('pending','approved','rejected') DEFAULT 'pending',
   `request_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -91,11 +115,17 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `username`, `password`, `role`, `created_at`) VALUES
 (1, 'Melvin Macabeo', '$2y$10$QmuOVV8saLiYH72bqOO8uuot3BHuB.UnTVba0xhHQdK9wltPWm4Fu', 'admin', '2025-02-13 08:15:09'),
 (2, 'Zoey', '$2y$10$M6x7jbA7KRAEW7wN9GT4cOnr7/tahdghSQ4Un5B2/r7k6S0roueDe', 'staff', '2025-02-13 08:57:04'),
-(3, 'Melvin', '$2y$10$Q1pmJqZFwwfGfD0XSF4ZgOe1FvHW86uYyMlpiZ7TySOwBfltAr/8G', 'admin', '2025-02-13 11:16:44');
+(6, 'Bruno', '$2y$10$XZr2SWwNpldYvBkpb1k.MuxojalHtkKc3Hf.d7CUzIO0JSswn8sdC', 'admin', '2025-02-18 11:56:30');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `delivery_logs`
+--
+ALTER TABLE `delivery_logs`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `inventory`
@@ -129,28 +159,34 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `delivery_logs`
+--
+ALTER TABLE `delivery_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

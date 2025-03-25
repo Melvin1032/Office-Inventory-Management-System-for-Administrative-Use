@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Inventory</title>
-    <link rel="stylesheet" href="../assets/table_styles.css">
+    <link rel="stylesheet" href="../css/table_styles.css">
 </head>
 <body>
 <?php include '../includes/sidebar.php'; ?>
@@ -80,6 +80,7 @@
                             <option value="Office Supplies">Office Supplies</option>
                             <option value="Janitorial Supplies">Janitorial Supplies</option>
                             <option value="Electrical Supplies">Electrical Supplies</option>
+                            <option value="Computer Supplies">Computer Supplies</option>
                         </select>
 
                         <input type="text" name="item_name[]" placeholder="Item Name" required>
@@ -103,5 +104,6 @@
     </div>
 </body>
 
+<!-- JS SCRIPT -->
 <script src="../assets/modal.js"></script>
 </html>

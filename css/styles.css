@@ -1,4 +1,4 @@
-
+/* CSS FOR LOGIN AND REGISTER */
 * {
 	box-sizing: border-box;
 }
@@ -25,7 +25,7 @@ body {
 	flex-direction: column;
 	font-family: 'Montserrat', sans-serif;
 	height: 100%;
-	margin: -20px 0 50px;
+	margin: -30px 0 50px;
     z-index: 1;
 }
 

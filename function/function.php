@@ -10,16 +10,15 @@ if (!isset($_SESSION['user_id'])) {
 }
 ?>
 
-
 <!-- ADD INVENTORY -->
 
-<!-- ADD INVENTORY -->
 <?php
 if (isset($_POST['add'])) {
     $category_prefixes = [
         'Office Supplies' => '(1010)',
         'Janitorial Supplies' => '(2020)',
         'Electrical Supplies' => '(3030)',
+        'Computer Supplies' => '(4040)',
     ];
 
     $supplier = $_POST["supplier"];
@@ -128,11 +127,12 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
     }
 
     // Fetch the request details including stock number
-    $stmt = $pdo->prepare("SELECT r.id, u.username, r.user_id, r.item_name, r.quantity, r.unit, r.status, i.stock_num 
-                           FROM requests r
-                           JOIN users u ON r.user_id = u.id
-                           LEFT JOIN inventory i ON r.item_name = i.item_name
-                           WHERE r.id = ?");
+    $stmt = $pdo->prepare("SELECT r.id, u.username, r.user_id, r.item_name, r.quantity, r.unit, r.status, r.request_date, i.stock_num 
+                            FROM requests r
+                            JOIN users u ON r.user_id = u.id
+                            LEFT JOIN inventory i ON r.item_name = i.item_name
+                            WHERE r.id = ?");
+
     $stmt->execute([$request_id]);
     $request = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -189,7 +189,7 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
 }
 
 // Fetch all pending requests along with the username
-$stmt = $pdo->query("SELECT r.id, u.username, r.item_name, r.quantity, r.unit, r.status 
+$stmt = $pdo->query("SELECT r.id, u.username, r.item_name, r.quantity, r.unit, r.request_date, r.status 
                      FROM requests r
                      JOIN users u ON r.user_id = u.id
                      WHERE r.status = 'Pending'");
@@ -238,8 +238,6 @@ if (isset($_POST['delete_user'])) {
 <!-- FOR ADMIN DASHBOARD TO VIEW DATA -->
 
 <?php
-
-
     // Fetch data from database
     $stmt = $pdo->query("SELECT COUNT(*) FROM inventory");
     $total_inventory = $stmt->fetchColumn() ?? 0;

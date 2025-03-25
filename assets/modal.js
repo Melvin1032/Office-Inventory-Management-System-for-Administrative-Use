@@ -17,6 +17,7 @@ function addItem() {
             <option value="Office Supplies">Office Supplies</option>
             <option value="Janitorial Supplies">Janitorial Supplies</option>
             <option value="Electrical Supplies">Electrical Supplies</option>
+            <option value="Computer Suppies">Computer Supplies</option>
         </select>
 
         <input type="text" name="item_name[]" placeholder="Item Name" required>

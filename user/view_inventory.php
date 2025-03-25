@@ -1,21 +1,5 @@
 <?php
-session_start();
-require '../config/config.php'; //
-
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'staff') {
-    header("Location: login.php");
-    exit();
-}
-
-// Fetch inventory items
-$stmt = $pdo->query("SELECT item_name, category, supplier, quantity, last_updated,
-    CASE 
-        WHEN quantity = 0 THEN 'Out of Stock' 
-        ELSE 'In Stock' 
-    END AS stock_status
-FROM inventory");
-
-$inventory = $stmt->fetchAll();
+    require '../function/function.php';
 ?>
 
 <!DOCTYPE html>
@@ -24,42 +8,51 @@ $inventory = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Inventory</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background: #f4f4f4; }
-        .out-of-stock { color: red; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="../css/table_styles.css">
 </head>
 <body>
+<?php include '../includes/user_sidebar.php'; ?>
 
-<div class="container">
-    <h1>Inventory List</h1>
-    <table>
-        <tr>
-            <th>Item Name</th>
-            <th>Category</th>
-            <th>Supplier</th>
-            <th>Quantity</th>
-            <th>Last Updated</th>
-            <th>Status</th>
-        </tr>
-        <?php foreach ($inventory as $item): ?>
+<div class="inventory-content">
+        <div class="dashboard-header">
+            <h1>View Inventory</h1>
+            <p>Welcome, <b><?php 
+            echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest'; 
+            if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {;  
+            }
+        ?></b></p>
+        </div>
+    <table class="inventory-table">
+        <thead>
             <tr>
-                <td><?= htmlspecialchars($item['item_name']) ?></td>
-                <td><?= htmlspecialchars($item['category']) ?></td>
-                <td><?= htmlspecialchars($item['supplier']) ?></td>
-                <td><?= htmlspecialchars($item['quantity']) ?></td>
-                <td><?= htmlspecialchars($item['last_updated']) ?></td>
-                <td class="<?= $item['quantity'] == 0 ? 'out-of-stock' : '' ?>">
-                    <?= htmlspecialchars($item['stock_status']) ?>
-                </td>
+                <th>Item Stock No.</th>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Supplier</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Status</th>
+                <th>Acquisition Date</th>
             </tr>
-        <?php endforeach; ?>
+        </thead>
+        <tbody>
+            <?php foreach ($items as $item): ?>
+            <tr>
+                <td><?= htmlspecialchars($item["stock_num"]) ?></td>
+                <td><?= htmlspecialchars($item["item_name"]) ?></td>
+                <td><?= htmlspecialchars($item["category"]) ?></td>
+                <td><?= htmlspecialchars($item["supplier"]) ?></td>
+                <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>"><?= htmlspecialchars($item["quantity"]) ?></td>
+                <td><?= htmlspecialchars($item["unit"]) ?></td>
+                <td><b><?= htmlspecialchars($item["stock_status"]) ?></b></td>
+                <td><?= htmlspecialchars($item["last_updated"]) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
     </table>
-</div>
+    </div>
+            </form>
 
 </body>
+
 </html>

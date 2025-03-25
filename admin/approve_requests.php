@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Requests</title>
-    <link rel="stylesheet" href="../assets/table_styles.css">
+    <link rel="stylesheet" href="../css/table_styles.css">
 </head>
 <body>
 <?php include '../includes/sidebar.php'; ?>
@@ -31,6 +31,7 @@
             <th>Item Name</th>
             <th>Quantity</th>
             <th>Unit</th>
+            <th>Request Date</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -42,6 +43,7 @@
                 <td><?= htmlspecialchars($request['item_name']) ?></td>
                 <td><?= htmlspecialchars($request['quantity']) ?></td>
                 <td><?= htmlspecialchars($request['unit']) ?></td>
+                <td><?= htmlspecialchars($request['request_date']) ?></td>
                 <td><?= htmlspecialchars($request['status']) ?></td>
                 <td class="action-links">
     <a href="approve_requests.php?id=<?= $request['id'] ?>&action=approve" 

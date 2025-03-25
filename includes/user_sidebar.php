@@ -27,20 +27,9 @@ $pendingCount = $stmt->fetchColumn();
              <hr>
              <div class="sidenav">
                 <ul>
-                    <a href="../admin/dashboard.php"> <li><i class='bx bx-home-alt' ></i>Home</li></a>
-                    <a href="../admin/inventory.php"><li><i class='bx bx-message-alt-edit'></i>Manage Inventory</li></a>
-                    <a href="../admin/approve_requests.php"><li><i class='bx bx-message-square-check'></i>Requests 
-             <?php if ($pendingCount > 0): ?>
-            <span class="notif-badge"><?= $pendingCount; ?></span>
-        <?php endif; ?>
-    </li>
-</a>
-
-                    <a href="../admin/staff_accounts.php"><li><i class='bx bxs-user-account'></i>Staff Accounts</li></a>
-                </a>
-                <a href="../admin/reports.php">
-                    <li><i class='bx bxs-copy-alt'></i>Report Logs (PDF)</li>
-                </a>
+                    <a href="../user/staff_dashboard.php"> <li><i class='bx bx-home-alt' ></i>Home</li></a>
+                    <a href="../user/staff_requests.php"><li><i class='bx bx-message-alt-edit'></i>Requests</li></a>
+                    <a href="../user/view_inventory.php"><li><i class='bx bx-message-square-check'></i>View Inventory</li></a>
                 </ul>
              </div>
         </div>

@@ -247,3 +247,11 @@ img {
     margin-top: 10px;
 }
 
+
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+

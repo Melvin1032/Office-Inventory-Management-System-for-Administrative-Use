@@ -65,7 +65,7 @@ $pendingCount = $stmt->fetchColumn();
     </div>
 
 <!-- JS SCRIPT -->
-<script src="../assets/accountToggle.js"></script>
+<script src="../js/accountToggle.js"></script>
 
 </body>
 </html>

@@ -41,7 +41,9 @@
                 <td><?= htmlspecialchars($item["supplier"]) ?></td>
                 <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>"><?= htmlspecialchars($item["quantity"]) ?></td>
                 <td><?= htmlspecialchars($item["unit"]) ?></td>
-                <td><?= htmlspecialchars($item["stock_status"]) ?></td>
+                <td class="stock-status <?= strtolower(str_replace(' ', '-', $item['stock_status'])) ?>">
+                <b><?= htmlspecialchars($item["stock_status"]) ?></b>
+                </td>
                 <td><?= htmlspecialchars($item["last_updated"]) ?></td>
                 <td>
                 <form method="GET" style="display:inline;">
@@ -102,8 +104,9 @@
             </form>
         </div>
     </div>
-</body>
-
+    
 <!-- JS SCRIPT -->
-<script src="../assets/modal.js"></script>
+<script src="../js/modal.js"></script>
+
+</body>
 </html>

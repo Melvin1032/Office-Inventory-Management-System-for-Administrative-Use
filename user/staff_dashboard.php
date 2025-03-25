@@ -1,5 +1,5 @@
 <?php
-    require '../function/function.php';
+    require '../function/user_function.php';
 ?>
 
 <!DOCTYPE html>
@@ -14,10 +14,13 @@
 <?php include '../includes/user_sidebar.php'; ?>
 
 <div class="home-content">
-        <div class="dashboard-header">
-            <h1>Admin Dashboard</h1>
-            <p>Welcome, Admin</p>
-        </div>
+<div class="dashboard-header">
+        <h1>Staff Dashboard</h1>
+        <p>Welcome, <b><?php 
+        echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest'; 
+        if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {;  
+        }?></b></p>
+    </div>
         <div class="dashboard-content">
             <div class="card">
                  <i class='bx bxs-box' ></i>
@@ -35,6 +38,26 @@
                 <p><?php echo $approved_requests; ?></p>
             </div>
         </div>
+        <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Request Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($requests as $request): ?>
+            <tr>
+                <td><?= htmlspecialchars($request['item_name']) ?></td>
+                <td><?= htmlspecialchars($request['quantity']) ?></td>
+                <td><?= htmlspecialchars($request['request_date']) ?></td>
+                <td class="status <?= strtolower($request['status']) ?>"><b><?= htmlspecialchars($request['status']) ?></b></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
     </div>
 </body>
 </html>

@@ -21,7 +21,7 @@
         if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {;  
         }?></b></p>
     </div>
-        <div class="dashboard-content">
+        <div class="user_dashboard-content">
             <div class="card">
                  <i class='bx bxs-box' ></i>
                 <h3>Total Inventory Items</h3>

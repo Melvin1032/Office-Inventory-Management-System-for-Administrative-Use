@@ -56,7 +56,6 @@ $pendingCount = $stmt->fetchColumn();
        <i class='bx bxs-up-arrow bx-tada' style='color:#ffffff' id="dropdownToggle"></i>
         <div class="dropdown-menu" id="dropdownMenu">
             <ul>
-                <li><a href="../profile.php">User Profile</a></li>
                 <li><a href="../auth/logout.php">Logout</a></li>
             </ul>
         </div>

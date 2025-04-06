@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Inventory</title>
     <link rel="stylesheet" href="../css/table_styles.css">
+    <link rel="icon" href="../assets/icon.png" type="image/png">
 </head>
 <body>
 <?php include '../includes/sidebar.php'; ?>
@@ -48,7 +49,7 @@
                 <td>
                 <form method="GET" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <!-- <button type="submit" class="btn btn-primary">Edit</button> -->
                     </form>
 
                     <form method="POST" style="display:inline;">

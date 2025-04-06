@@ -54,6 +54,29 @@ class PDF extends FPDF
             $this->Cell(0, 5, "Batch ID: $batch_id", 0, 1, 'L');
         }
     }
+
+    // Footer function to add "Received by" and "Verified by" in the footer on each page
+    function Footer()
+    {
+        // Position at 1.5 cm from the bottom
+        $this->SetY(-15);
+
+        // Set font for footer text
+        $this->SetFont('Arial', '', 10);
+
+        // Get the logged-in admin's name (default to 'Admin' if not logged in)
+        $loggedInAdmin = isset($_SESSION['username']) ? $_SESSION['username'] : 'Admin';
+
+        // "Received by" Section
+        $this->Cell(0, 6, "Received by: " . $loggedInAdmin, 0, 1, 'C');
+
+        // "Verified by" Section
+        $this->Cell(0, 6, "Verified by: Lebron James - HEAD SUPPLY OFFICER", 0, 1, 'C');
+
+        // Add line above footer
+        $this->SetDrawColor(0, 0, 0);
+        $this->Line(10, $this->GetY(), 290, $this->GetY());
+    }
 }
 
 // Create PDF instance
@@ -107,23 +130,6 @@ if (count($batches) > 0) {
 
             // Spacing
             $pdf->Ln(20);
-
-            $loggedInAdmin = isset($_SESSION['username']) ? $_SESSION['username'] : 'Admin';
-
-            $pdf->Ln(10);
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(0, 6, "Received by:", 0, 1, 'C');
-
-            $pdf->SetFont('Arial', 'B', 12);
-            $pdf->Cell(0, 6, $loggedInAdmin, 0, 1, 'C');
-
-            $pdf->Ln(5);
-
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(0, 6, "Verified by:", 0, 1, 'C');
-
-            $pdf->SetFont('Arial', 'B', 12);
-            $pdf->Cell(0, 6, "Lebron James - HEAD SUPPLY OFFICER", 0, 1, 'C');
         }
     }
 } else {

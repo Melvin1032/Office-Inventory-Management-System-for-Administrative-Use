@@ -37,6 +37,7 @@ $pendingCount = $stmt->fetchColumn();
 </a>
 
                     <a href="../admin/staff_accounts.php"><li><i class='bx bxs-user-account'></i>Staff Accounts</li></a>
+                    <a href="../admin/send_notice.php"><li><i class='bx bx-user-voice'></i>Send Notice</li></a>
                 </a>
                 <a href="../admin/reports.php">
                     <li><i class='bx bxs-copy-alt'></i>Report Logs (PDF)</li>

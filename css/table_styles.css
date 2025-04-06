@@ -652,3 +652,105 @@ select, input {
 
 
 
+/* Chat-style message container */
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Individual Message Style */
+.message-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+.sender {
+    color: #007bff;
+}
+
+.message-date {
+    font-size: 0.875rem;
+    color: #888;
+}
+
+.message-body {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.message-body p {
+    margin: 0;
+}
+
+/* Style for the Mark as Read link */
+.mark-as-read {
+    display: inline-block;
+    margin-top: 10px;
+    color: rgb(134, 134, 134);  /* White text */
+    text-decoration: none;  /* Remove underline */
+    border-radius: 5px;  /* Rounded corners */
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;  /* Smooth transition for hover effect */
+}
+
+/* Hover effect for the link */
+.mark-as-read:hover {
+    text-decoration: none;  /* Ensures no underline on hover */
+}
+
+/* Optional: Add a tooltip to the "Mark as Read" link */
+.mark-as-read:hover::after {
+    content: "Click to mark as read";
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 3px;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Tooltip visibility on hover */
+.mark-as-read:hover::after {
+    opacity: 1;
+}
+
+
+/* Style for the Delete link */
+.delete-message {
+    display: inline-block;
+    margin-top: 10px;
+    color: rgb(255, 2, 2);  /* White text */
+    text-decoration: none;  /* Remove underline */
+    border-radius: 5px;  /* Rounded corners */
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;  /* Smooth transition for hover effect */
+}
+
+.delete-message, .mark-as-read {
+    padding: 0 10px;
+}

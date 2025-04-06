@@ -74,8 +74,6 @@ if (isset($_POST['add'])) {
 <!-- VIEW INVENTORY -->
 
 <?php
-
-
 $stmt = $pdo->query("SELECT id, stock_num, item_name, category, quantity, unit, supplier, last_updated,
     CASE 
         WHEN quantity = 0 THEN 'Out of Stock' 
@@ -257,3 +255,54 @@ if (isset($_POST['delete_user'])) {
     $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'admin'");
     $total_admin = $stmt->fetchColumn() ?? 0;
 ?>
+
+
+
+
+<!-- SEND NOTIF -->
+ 
+<?php
+
+// Send Notification Function
+if (isset($_POST['send_notification'])) {
+    $user_id = $_POST['user_id']; // User ID to send notification to (staff member)
+    $message = $_POST['message']; // Notification message
+    $sender_id = $_SESSION['user_id']; // The logged-in admin is the sender
+
+    try {
+        // Insert notification into the database (sender_id is the admin, user_id is the staff member)
+        $stmt = $pdo->prepare("INSERT INTO notifications (sender_id, user_id, message, created_at) VALUES (?, ?, ?, NOW())");
+        $stmt->execute([$sender_id, $user_id, $message]);
+
+        // Redirect to send_notice.php with a success message
+        header("Location: send_notice.php?success=Notification sent successfully");
+        exit();
+    } catch (Exception $e) {
+        // Handle any errors
+        echo "Error: " . $e->getMessage();
+    }
+}
+?>
+
+
+
+<?php
+// Mark notification as read
+if (isset($_GET['mark_read'])) {
+    $notification_id = $_GET['mark_read'];
+
+    try {
+        $stmt = $pdo->prepare("UPDATE notifications SET status = 'Read' WHERE id = ?");
+        $stmt->execute([$notification_id]);
+
+        // Redirect after marking as read
+        header("Location: notifications.php?success=Notification marked as read");
+        exit();
+
+    } catch (Exception $e) {
+        // Handle errors
+        echo "Error: " . $e->getMessage();
+    }
+}
+?>
+

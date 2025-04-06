@@ -34,7 +34,6 @@ $requests = $stmt->fetchAll();
 
 
 
-
 <!-- STAFF REQUESTS -->
  
 <?php
@@ -97,7 +96,25 @@ if (isset($_POST['request'])) {
 }
 
 // Fetch available items from inventory
+
 $stmt = $pdo->query("SELECT id, item_name, quantity, unit FROM inventory WHERE quantity > 0");
+$items = $stmt->fetchAll();
+?>
+
+
+
+
+
+
+<!-- VIEW INVENTORY -->
+
+<?php
+$stmt = $pdo->query("SELECT id, stock_num, item_name, category, quantity, unit, supplier, last_updated,
+    CASE 
+        WHEN quantity = 0 THEN 'Out of Stock' 
+        ELSE 'In Stock' 
+    END AS stock_status
+FROM inventory");
 $items = $stmt->fetchAll();
 ?>
 
@@ -147,4 +164,62 @@ $items = $stmt->fetchAll();
 ?>
 
 
+
+<!-- VIEW NOTIF -->
+
+<?php
+// Assuming the database connection is already available
+
+// Query to fetch notifications with admin's username (sender)
+$stmt = $pdo->prepare("SELECT n.*, u.username AS sender_name 
+                       FROM notifications n
+                       JOIN users u ON n.sender_id = u.id
+                       ORDER BY n.created_at DESC"); // Fetch notifications and sender's name
+$stmt->execute();
+$notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!-- NOTIF USER COUNT -->
+
+<?php
+// Assuming the session is already started and the user is logged in
+$user_id = $_SESSION['user_id']; // Get the logged-in user's ID
+
+// Query to count unread notifications for the logged-in user
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND status = 'unread'");
+$stmt->execute([$user_id]);
+$unreadNotificationsCount = $stmt->fetchColumn();
+?>
+
+
+
+<!-- MARK AS READ -->
+<?php
+if (isset($_GET['id']) && isset($_GET['action'])) {
+    $notification_id = $_GET['id'];
+    $action = $_GET['action'];
+    
+    if ($action === 'approve') {
+        // Update the notification status to 'read'
+        $query = "UPDATE notifications SET status = 'read' WHERE id = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([$notification_id]);
+        
+        // Redirect to the notifications page after the update
+        header("Location: view_notice.php");
+        exit();
+    }
+    
+    if ($action === 'delete') {
+        // Delete the notification from the database
+        $query = "DELETE FROM notifications WHERE id = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([$notification_id]);
+        
+        // Redirect to the notifications page after deletion
+        header("Location: view_notice.php");
+        exit();
+    }
+}
+?>
 

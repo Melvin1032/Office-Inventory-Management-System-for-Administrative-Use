@@ -30,6 +30,14 @@ $pendingCount = $stmt->fetchColumn();
                     <a href="../user/staff_dashboard.php"> <li><i class='bx bx-home-alt' ></i>Home</li></a>
                     <a href="../user/staff_requests.php"><li><i class='bx bx-message-alt-edit'></i>Requests</li></a>
                     <a href="../user/view_inventory.php"><li><i class='bx bx-message-square-check'></i>View Inventory</li></a>
+                        <a href="../user/view_notice.php">
+        <li>
+            <i class='bx bx-user-voice'></i> View Notice
+            <?php if ($unreadNotificationsCount > 0): ?>
+                <span class="notif-badge"><?= $unreadNotificationsCount; ?></span>
+            <?php endif; ?>
+        </li>
+    </a>
                 </ul>
              </div>
         </div>

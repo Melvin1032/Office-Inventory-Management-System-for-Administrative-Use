@@ -9,6 +9,7 @@ $success = isset($_SESSION["success"]) ? $_SESSION["success"] : ''; // Retrieve 
 unset($_SESSION["success"]);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
     // Login logic
     if (isset($_POST["login"])) {
         // Ensure the keys exist before accessing them

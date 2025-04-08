@@ -19,27 +19,28 @@
         <h1>Send Notice</h1>
         <p>Welcome, Admin <b><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Admin'; ?></b></p>
     </div>
+    <br><br>
 
-    <!-- Send Notice Form -->
-    <form method="POST">
-        <label for="user_id">Select User:</label>
-        <select name="user_id" required>
-            <?php
-            // Fetch all users with the 'staff' role
-            $stmt = $pdo->query("SELECT id, username FROM users WHERE role = 'staff'");
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  <!-- Send Notice Form -->
+<form method="POST" class="notification-form">
+    <label for="user_id">Select User:</label>
+    <select name="user_id" class="form-select" required>
+        <?php
+        // Fetch all users with the 'staff' role
+        $stmt = $pdo->query("SELECT id, username FROM users WHERE role = 'staff'");
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($users as $user) {
-                echo "<option value=\"{$user['id']}\">{$user['username']}</option>";
-            }
-            ?>
-        </select>
+        foreach ($users as $user) {
+            echo "<option value=\"{$user['id']}\">{$user['username']}</option>";
+        }
+        ?>
+    </select>
 
-        <label for="message">Message:</label>
-        <textarea name="message" required></textarea>
+    <label for="message">Message:</label>
+    <textarea name="message" class="form-textarea" required></textarea>
 
-        <button type="submit" name="send_notification">Send Notification</button>
-    </form>
+    <button type="submit" name="send_notification" class="form-btn">Send Notification</button>
+</form>
 
     <?php
     // Display success message if notification is sent
@@ -48,6 +49,7 @@
     }
     ?>
 </div>
+
 
 </body>
 </html>

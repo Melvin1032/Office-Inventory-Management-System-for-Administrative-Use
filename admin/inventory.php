@@ -2,6 +2,7 @@
     require '../function/function.php';
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,33 +34,38 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            <?php foreach ($items as $item): ?>
-            <tr>
-                <td><?= htmlspecialchars($item["stock_num"]) ?></td>
-                <td><?= htmlspecialchars($item["item_name"]) ?></td>
-                <td><?= htmlspecialchars($item["category"]) ?></td>
-                <td><?= htmlspecialchars($item["supplier"]) ?></td>
-                <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>"><?= htmlspecialchars($item["quantity"]) ?></td>
-                <td><?= htmlspecialchars($item["unit"]) ?></td>
-                <td class="stock-status <?= strtolower(str_replace(' ', '-', $item['stock_status'])) ?>">
-                <b><?= htmlspecialchars($item["stock_status"]) ?></b>
-                </td>
-                <td><?= htmlspecialchars($item["last_updated"]) ?></td>
-                <td>
-                <form method="GET" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                        <!-- <button type="submit" class="btn btn-primary">Edit</button> -->
-                    </form>
+       <!-- manage_inventory.php -->
 
-                    <form method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                        <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
+<tbody>
+    <?php foreach ($items as $item): ?>
+    <tr>
+        <td><?= htmlspecialchars($item["stock_num"]) ?></td>
+        <td><?= htmlspecialchars($item["item_name"]) ?></td>
+        <td><?= htmlspecialchars($item["category"]) ?></td>
+        <td><?= htmlspecialchars($item["supplier"]) ?></td>
+        <td class="<?= $item["quantity"] == 0 ? 'out-of-stock' : '' ?>"><?= htmlspecialchars($item["quantity"]) ?></td>
+        <td><?= htmlspecialchars($item["unit"]) ?></td>
+        <td class="stock-status <?= strtolower(str_replace(' ', '-', $item['stock_status'])) ?>">
+        <b><?= htmlspecialchars($item["stock_status"]) ?></b>
+        </td>
+        <td><?= htmlspecialchars($item["last_updated"]) ?></td>
+        <td>
+            <!-- Edit Button -->
+            <form method="GET" action="edit_item.php" style="display:inline;">
+                <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                <button type="submit" class="btn btn-primary">Edit</button>
+            </form>
+
+            <!-- Delete Button -->
+            <form method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</tbody>
+
     </table>
     </div>
     <div class="add-container">

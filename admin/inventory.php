@@ -53,13 +53,13 @@
             <!-- Edit Button -->
             <form method="GET" action="edit_item.php" style="display:inline;">
                 <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                <button type="submit" class="btn btn-primary">Edit</button>
+                <button type="submit" class="btn btn-primary"><i class='bx bx-edit' ></i></button>
             </form>
 
             <!-- Delete Button -->
             <form method="POST" style="display:inline;">
                 <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class='bx bx-trash' ></i></button>
             </form>
         </td>
     </tr>

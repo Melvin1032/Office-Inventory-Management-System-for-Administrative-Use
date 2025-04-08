@@ -44,7 +44,7 @@
                 <td class="actions">
                     <form method="POST" style="display:inline;">
                      <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                     <button type="submit" name="delete_user" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                     <button type="submit" name="delete_user" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class='bx bx-trash' ></i></button>
                     </form>
 
 
